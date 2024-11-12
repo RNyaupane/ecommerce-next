@@ -1,0 +1,62 @@
+/* Style the dots container */
+.slick-dots {
+  margin-top: 30px !important;
+  bottom: -40px !important;
+  /* Adjusts the position of the dots */
+}
+
+.slick-list {
+  padding-top: 5px !important;
+  padding-bottom: 50px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+/* Style each dot */
+.slick-dots li button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.slick-dots li button::before {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+/* Style the active dot */
+.slick-dots li.slick-active button {
+  background-color: #fed700;
+  width: 25px;
+  opacity: 1;
+  border-radius: 10px;
+  z-index: 999999;
+  height: 10px;
+
+}
+
+.slick-dots li.slick-active button:before {
+  background: transparent !important;
+  color: transparent !important;
+
+}
+
+/* .slick-next {
+  right: 0px !important;
+  background-color: blue !important;
+}
+
+.slick-prev {
+  left: -8px !important;
+  background-color: #fed700 !important;
+  height: 25px !important;
+  position: absolute !important;
+  width: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 2px !important;
+  border-radius: 20px;
+  z-index: 9999999999999999999999;
+} */

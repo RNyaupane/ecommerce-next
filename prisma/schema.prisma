@@ -1,0 +1,879 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model about_us {
+  id             Int     @id
+  title          String? @db.VarChar(255)
+  description    String? @db.LongText
+  featured_image String? @db.VarChar(255)
+
+  @@map("about-us")
+}
+
+model addresses {
+  id          Int       @id @db.UnsignedInt
+  user_id     Int
+  province_id Int
+  district_id Int
+  street      String    @db.VarChar(255)
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+}
+
+model attributes {
+  id         Int       @id
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  is_active  Boolean?  @default(true)
+}
+
+model brand_translations {
+  id         Int       @id @db.UnsignedInt
+  brand_id   Int
+  locale     String    @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model brands {
+  id         Int       @id
+  name       String    @db.VarChar(255)
+  slug       String    @db.VarChar(255)
+  image      String?   @db.VarChar(255)
+  is_active  Boolean
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model carts {
+  id         Int       @id @db.UnsignedInt
+  user_id    Int
+  product_id Int
+  price      Float
+  quantity   Int
+  attribute  BigInt?
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model categories {
+  id           Int     @id
+  parent_id    Int     @default(0)
+  name         String  @db.VarChar(255)
+  slug         String  @db.VarChar(255)
+  image        String? @db.VarChar(255)
+  mobile_image String? @db.VarChar(255)
+  show_in_home Boolean @default(false)
+  ordering     Int?
+  is_active    Boolean
+  created_at   String? @db.VarChar(255)
+  updated_at   String? @db.VarChar(255)
+}
+
+model category_banners {
+  id           Int       @id @db.UnsignedInt
+  category_id  Int
+  heading      String    @db.VarChar(255)
+  title        String    @db.VarChar(255)
+  sub_title    String    @db.VarChar(255)
+  banner_image String    @db.VarChar(255)
+  is_active    Boolean
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model category_translations {
+  id          Int       @id @db.UnsignedInt
+  category_id Int
+  locale      String    @db.VarChar(255)
+  name        String    @db.VarChar(255)
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+}
+
+model contacts {
+  id         Int       @id @db.UnsignedInt
+  name       String    @db.VarChar(255)
+  email      String    @db.VarChar(255)
+  phone      String?   @db.VarChar(20)
+  subject    String?   @db.VarChar(255)
+  message    String    @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model coupon_categories {
+  coupon_id   Int       @id @default(autoincrement())
+  category_id Int
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model coupon_products {
+  coupon_id  Int       @id @default(autoincrement())
+  product_id Int
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.DateTime(0)
+
+  @@ignore
+}
+
+model coupons {
+  id                    Int       @id @db.UnsignedInt
+  code                  String    @db.VarChar(255)
+  is_percent            Boolean
+  value                 Float
+  start_date            DateTime  @default(now()) @db.Date
+  end_date              DateTime  @default(dbgenerated("('0000-00-00')")) @db.Date
+  is_active             Boolean
+  minimum_spend         Float
+  maximum_spend         Float
+  usage_limit_of_coupon Int
+  usage_limit_of_person Int
+  created_at            DateTime? @db.Timestamp(0)
+  updated_at            DateTime? @db.Timestamp(0)
+}
+
+model delivery_vendors {
+  id              Int    @id
+  name            String @db.VarChar(255)
+  address         String @db.VarChar(255)
+  delivery_charge Float
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model district_master {
+  district_id              Int                             @id @default(autoincrement())
+  district_name            String                          @db.VarChar(255)
+  country_id               Int
+  zone_state_id            Int
+  dev_region_id            Int
+  created_by               String                          @db.VarChar(90)
+  created_date             DateTime                        @db.DateTime(0)
+  modified_by              String?                         @db.VarChar(90)
+  modified_date            DateTime?                       @db.DateTime(0)
+  is_deleted_flag          district_master_is_deleted_flag @default(n)
+  modified_deleted_remarks String?                         @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model email_config_settings {
+  mail_host  String    @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  email_from String    @db.VarChar(255)
+  username   String    @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  port       Int
+  encryption String    @db.VarChar(255)
+
+  @@ignore
+}
+
+model expenses {
+  id                  BigInt   @id
+  order_id            BigInt?
+  total_return_amount Float    @default(0.00)
+  payment_method_id   Int?
+  created_at          DateTime @default(dbgenerated("(curdate())")) @db.Date
+  status              Boolean? @default(false)
+  created_by          BigInt
+  fiscal_year_id      Int?
+
+  @@index([order_id], map: "expenses_orders_id_fk")
+  @@index([created_by], map: "expenses_users_id_fk")
+}
+
+model faqs {
+  id         Int       @id @db.UnsignedInt
+  question   String    @db.LongText
+  answer     String    @db.LongText
+  is_active  Boolean
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model fcm_token {
+  user_id      BigInt   @id @default(autoincrement())
+  fcm_token    String   @db.VarChar(200)
+  created_date DateTime @db.DateTime(0)
+
+  @@ignore
+}
+
+model features {
+  id         Int       @id @db.UnsignedInt
+  title      String    @db.VarChar(255)
+  sub_title  String    @db.VarChar(255)
+  span       String    @db.VarChar(255)
+  icon       String?   @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  feature    Int
+}
+
+model fiscal_year_master {
+  id         Int      @id
+  name       String   @db.VarChar(255)
+  start_date DateTime @db.Date
+  end_date   DateTime @db.Date
+}
+
+model flash_sale_products {
+  id            Int       @id @db.UnsignedInt
+  flash_sale_id Int
+  product_id    Int
+  price         Float
+  quantity      Int
+  created_at    DateTime? @db.Timestamp(0)
+  updated_at    DateTime? @db.Timestamp(0)
+}
+
+model flash_sales {
+  id         Int       @id @db.UnsignedInt
+  name       String    @db.VarChar(255)
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+  created_by Int?
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  is_active  Boolean?  @default(false)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model general_settings {
+  key        String    @db.VarChar(255)
+  value      String?   @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model global_config {
+  title String @db.VarChar(200)
+  value String @db.Text
+
+  @@ignore
+}
+
+model logistic_payment_track {
+  id                BigInt    @id
+  order_id          BigInt
+  paid_amount       Float
+  payment_method_id Int
+  vendor_id         Int
+  created_by        Int
+  fiscal_year_id    Int
+  created_at        DateTime? @default(dbgenerated("(curdate())")) @db.Date
+}
+
+model menu_master {
+  menu_id     Int                   @id
+  menu_code   String                @db.VarChar(255)
+  menu_name   String                @db.VarChar(255)
+  menu_index  Int
+  menu_type   menu_master_menu_type
+  pre_menu_id Int?
+  is_active   menu_master_is_active @default(y)
+  icon_class  String?               @db.VarChar(255)
+  route       String?               @db.VarChar(255)
+  created_at  DateTime              @default(now()) @db.DateTime(0)
+  created_by  Int
+  modified_by Int?
+  updated_at  DateTime?             @db.DateTime(0)
+}
+
+model migrations {
+  id        Int    @id @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model nav_category {
+  id           Int       @id
+  category_1   Int?      @unique(map: "category_id")
+  category_2   Int?
+  category_3   Int?
+  category_4   Int?
+  created_by   BigInt
+  created_date DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model notifications {
+  id         Int       @id @db.UnsignedInt
+  title      String    @db.VarChar(255)
+  message    String    @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model order_cancellations {
+  id       Int     @id
+  order_id BigInt
+  reason   String? @db.VarChar(255)
+
+  @@index([order_id], map: "order_cancellations_orders_id_fk")
+}
+
+model order_coupon {
+  id           BigInt    @id
+  coupon_id    Int
+  order_id     Int
+  user_id      Int
+  created_date DateTime? @db.DateTime(0)
+}
+
+model order_details {
+  id                      Int       @id @db.UnsignedInt
+  order_id                BigInt
+  product_id              BigInt
+  attribute               BigInt?
+  code                    Int?
+  product_coupon_discount Float     @default(0.00)
+  price                   Float
+  quantity                Int
+  payment_status          Boolean   @default(false)
+  delivery_status         Int
+  created_at              DateTime? @db.Timestamp(0)
+  updated_at              DateTime? @db.Timestamp(0)
+
+  @@index([product_id], map: "order_details___fk")
+  @@index([order_id], map: "order_details_orders_id_fk")
+}
+
+model order_logs {
+  id         Int       @id @db.UnsignedInt
+  code       String    @db.LongText
+  log        String    @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model order_modes {
+  id   Int    @id
+  name String @db.VarChar(100)
+}
+
+model order_status {
+  id         Int       @id @db.UnsignedInt
+  name       String    @db.VarChar(255)
+  msg        String    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  code       String?   @db.VarChar(255)
+}
+
+model orders {
+  id                        BigInt    @id
+  user_id                   Int
+  delivery_vendor_id        Int?
+  delivery_vendor_amount    Float?
+  billing_address_id        Int?
+  shipping_address_id       Int?
+  shipping_method_id        Int?      @db.UnsignedInt
+  payment_type              Int
+  code                      Int
+  grand_total               Float
+  total_coupon_discount     Decimal   @default(0.00) @db.Decimal(10, 2)
+  net_total                 Float
+  date                      String?   @db.VarChar(200)
+  created_at                DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  updated_at                DateTime? @db.Timestamp(0)
+  delivery_status           Boolean?  @default(true)
+  vat                       String?   @db.VarChar(255)
+  gross_amount              Float?
+  discount_amount           Float?
+  tax_amount                Float?
+  discount_per              String?   @db.VarChar(255)
+  discountType              String?   @db.VarChar(255)
+  mode_type                 String?   @default("web") @db.VarChar(100)
+  coupon_code               String?   @db.VarChar(255)
+  fiscal_year_id            Int?
+  remarks                   String?   @db.LongText
+  created_by                Int?
+  order_by                  Int?
+  delivery_amount_by_vendor Float?
+  logistic_order_code       String?   @db.VarChar(200)
+  logistic_token            String?   @db.VarChar(200)
+  cod_amount                Float?
+  customer_remarks          String?   @db.VarChar(200)
+  is_settled                Boolean?  @default(false)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model password_resets {
+  email      String    @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@ignore
+}
+
+model payment_method {
+  id     BigInt   @id
+  name   String   @db.VarChar(255)
+  status Boolean? @default(true)
+}
+
+model payment_mode {
+  payment_mode_id Int     @id
+  name            String  @db.VarChar(200)
+  online_process  Boolean @default(false)
+  is_active       Boolean @default(false)
+}
+
+model personal_access_tokens {
+  id             BigInt    @id @db.UnsignedBigInt
+  tokenable_type String    @db.VarChar(255)
+  tokenable_id   BigInt    @db.UnsignedBigInt
+  name           String    @db.VarChar(255)
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
+  abilities      String?   @db.Text
+  last_used_at   DateTime? @db.Timestamp(0)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
+}
+
+model product_attributes {
+  id             BigInt    @id
+  product_id     BigInt
+  attribute_id   Int
+  value          String    @db.VarChar(255)
+  sku            String    @db.VarChar(255)
+  is_active      Boolean?  @default(true)
+  featured_image String?   @db.VarChar(255)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([attribute_id], map: "product_attributes_attributes_id_fk")
+  @@index([product_id], map: "product_attributes_products_id_fk")
+}
+
+model product_gallaries {
+  id             Int       @id @db.UnsignedInt
+  product_id     BigInt
+  gallary_images String    @db.LongText
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([product_id], map: "product_gallaries_products_id_fk")
+}
+
+model product_masters {
+  id             Int     @id @db.UnsignedInt
+  product_id     BigInt
+  is_active      Boolean
+  attribute_id   BigInt?
+  cost_price     Float?
+  price          Float
+  profit_margin  String  @db.VarChar(255)
+  quantity       Int?
+  fiscal_year_id Int?
+  created_at     String? @db.VarChar(255)
+  updated_at     String? @db.VarChar(255)
+
+  @@index([attribute_id], map: "product_masters_product_attributes_id_fk")
+  @@index([product_id], map: "product_masters_products_id_fk")
+}
+
+model products {
+  id              BigInt    @id
+  brand_id        Int?
+  name            String    @db.VarChar(255)
+  slug            String    @db.VarChar(255)
+  description     String    @db.LongText
+  specifications  String    @db.Text
+  category_id     Int
+  sub_category_id Int
+  is_active       Boolean
+  image           String?   @db.VarChar(255)
+  sku             String?   @db.VarChar(255)
+  in_stock        Boolean   @default(true)
+  created_by      BigInt?
+  vendor_id       Int?
+  viewed_date     DateTime? @db.Timestamp(0)
+  created_at      String?   @db.VarChar(255)
+  updated_at      String?   @db.VarChar(255)
+  fiscal_year_id  Int?
+  show_in_home    Boolean?  @default(true)
+  top_rated       Boolean   @default(false)
+  on_sale         Boolean   @default(false)
+  is_featured     Boolean   @default(false)
+}
+
+model purchase_return_details {
+  id                   BigInt  @id
+  purchase_return_id   BigInt
+  product_id           BigInt?
+  product_attribute_id BigInt?
+  cost_price           Float?
+  selling_price        Float
+  qty                  Int
+  total_price          Float?
+
+  @@index([product_id], map: "purhchase_return_details_products_id_fk")
+  @@index([purchase_return_id], map: "purhchase_return_details_purchase_returns_master_id_fk")
+}
+
+model purchase_return_master {
+  id             BigInt    @id
+  total_price    Float?
+  fiscal_year_id Int?
+  created_at     DateTime? @default(now()) @db.DateTime(0)
+  created_by     Int?
+}
+
+model quick_orders {
+  id         Int       @id @db.UnsignedInt
+  user_id    Int
+  product_id Int
+  price      Float
+  quantity   Int
+  attribute  BigInt?
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model reviews {
+  id         Int       @id @db.UnsignedInt
+  product_id Int
+  user_id    Int
+  rating     Float
+  review     String    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model sales_details {
+  id              BigInt   @id
+  sale_id         BigInt
+  product_id      BigInt
+  price           Decimal  @db.Decimal(10, 2)
+  qty             Int
+  coupon_discount Decimal  @default(0.00) @db.Decimal(10, 2)
+  total_amount    Decimal? @db.Decimal(10, 2)
+  created_at      DateTime @default(dbgenerated("(curdate())")) @db.Date
+
+  @@index([product_id], map: "sales_details_products_id_fk")
+  @@index([sale_id], map: "sales_details_sales_master_id_fk")
+}
+
+model sales_master {
+  id              BigInt                     @id @unique(map: "sales_master_pk2")
+  bill_number     String                     @db.VarChar(255)
+  bill_date       DateTime                   @db.Date
+  customer_id     BigInt
+  gross_amount    Decimal                    @db.Decimal(10, 2)
+  tax_amount      Decimal                    @default(0.00) @db.Decimal(10, 2)
+  discount_amount Decimal                    @default(0.00) @db.Decimal(10, 2)
+  total_amount    Decimal                    @db.Decimal(10, 2)
+  discount_per    Int?
+  vat             String?                    @db.VarChar(255)
+  discountType    sales_master_discountType?
+  created_by      BigInt
+  created_at      DateTime                   @db.Date
+
+  @@index([customer_id], map: "sales_master_users_id_fk")
+}
+
+model sales_payments {
+  id                BigInt   @id
+  sale_entry_id     BigInt
+  payment_method_id Int
+  paid_amount       Decimal  @default(0.00) @db.Decimal(10, 2)
+  created_at        DateTime @default(dbgenerated("(curdate())")) @db.Date
+  created_by        Int?
+  fiscal_year_id    Int?
+
+  @@index([sale_entry_id], map: "sales_payments_sales_master_id_fk")
+}
+
+model sales_profit_loss {
+  id         BigInt    @id
+  order_id   BigInt
+  net_amount String    @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([order_id], map: "sales_profit_loss_orders_id_fk")
+}
+
+model sales_return {
+  id                     BigInt    @id
+  user_id                Int
+  delivery_vendor_id     Int?
+  delivery_vendor_amount Float?
+  billing_address_id     Int?
+  shipping_address_id    Int?
+  shipping_method_id     Int?      @db.UnsignedInt
+  payment_type           Int
+  code                   Int
+  grand_total            Float
+  total_coupon_discount  Decimal   @default(0.00) @db.Decimal(10, 2)
+  net_total              Float
+  date                   DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  created_at             DateTime? @db.Timestamp(0)
+  updated_at             DateTime? @db.Timestamp(0)
+  delivery_status        Boolean?  @default(true)
+  vat                    String?   @db.VarChar(255)
+  gross_amount           Float?
+  discount_amount        Float?
+  tax_amount             Float?
+  discount_per           String?   @db.VarChar(255)
+  discountType           String?   @db.VarChar(255)
+  mode_type              String?   @default("web") @db.VarChar(100)
+  coupon_code            String?   @db.VarChar(255)
+  fiscal_year_id         Int?
+  created_by             Int?
+}
+
+model sales_return_details {
+  id                      BigInt    @id
+  sales_return_id         BigInt
+  product_id              BigInt
+  attribute               BigInt?
+  code                    Int?
+  product_coupon_discount Float?
+  price                   Float?
+  quantity                Int?
+  payment_status          Boolean   @default(false)
+  delivery_status         Int?
+  created_at              DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([product_id], map: "sales_return_details_products_id_fk")
+  @@index([sales_return_id], map: "sales_return_details_sales_return_id_fk")
+}
+
+model search_record {
+  id               Int      @id
+  searched_product String   @db.VarChar(255)
+  ip_address       String   @db.VarChar(255)
+  time             DateTime @default(now()) @db.Timestamp(0)
+}
+
+model shipping_methods {
+  id            Int       @id @db.UnsignedInt
+  duration      String    @db.VarChar(255)
+  cost          Float
+  title         String    @db.VarChar(255)
+  duration_date Int?
+  is_active     Boolean   @default(false)
+  created_at    DateTime? @db.Timestamp(0)
+  updated_at    DateTime? @db.Timestamp(0)
+}
+
+model sliders {
+  id           Int       @id @db.UnsignedInt
+  main_title   String?   @db.VarChar(255)
+  title        String?   @db.VarChar(255)
+  sub_title    String?   @db.VarChar(255)
+  is_active    Boolean   @default(true)
+  category_id  Int
+  image        String    @db.VarChar(255)
+  mobile_image String?   @db.VarChar(255)
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model sms_logs {
+  log_id       BigInt   @id
+  message      String   @db.VarChar(255)
+  credit       String   @db.VarChar(50)
+  to_number    String   @db.VarChar(100)
+  network      String   @db.VarChar(100)
+  status       String   @db.VarChar(50)
+  created_date DateTime @db.DateTime(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sms_token {
+  auth_token String @db.Text
+
+  @@ignore
+}
+
+model social_sites {
+  id         Int     @id
+  name       String  @db.VarChar(200)
+  url        String  @db.VarChar(200)
+  icon_class String  @db.VarChar(200)
+  is_active  Boolean
+}
+
+model taxes {
+  id         Int       @id @db.UnsignedInt
+  percent    Float
+  is_active  Boolean
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model ticket {
+  ticket_id        BigInt   @id
+  ticket_no        String   @db.VarChar(200)
+  issue_category   Int?
+  description      String?  @db.Text
+  created_date     DateTime @db.DateTime(0)
+  created_by       BigInt
+  is_active        Boolean  @default(true)
+  parent_ticket_id BigInt   @default(0)
+  image            String?  @db.VarChar(255)
+}
+
+model ticket_issue_category {
+  id         Int       @id
+  name       String    @db.VarChar(255)
+  is_active  Int?      @default(1) @db.TinyInt
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  created_by Int?
+}
+
+model user_permission {
+  permission_id BigInt   @id
+  user_id       BigInt
+  menu_id       Int
+  created_by    Int
+  created_date  DateTime @db.DateTime(0)
+
+  @@index([menu_id], map: "fk_menu_id_user_permission")
+}
+
+model user_token {
+  id      BigInt @id
+  user_id BigInt
+  token   String @db.VarChar(200)
+}
+
+model user_verification_sms {
+  id           BigInt   @id
+  user_id      Int
+  contact      String   @db.VarChar(150)
+  email        String?  @db.VarChar(255)
+  code         String   @db.VarChar(100)
+  created_date DateTime @db.DateTime(0)
+}
+
+model users {
+  id                BigInt      @id
+  name              String      @db.VarChar(255)
+  contact           String?     @db.VarChar(150)
+  secondary_contact String?     @db.VarChar(100)
+  email             String?     @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at DateTime?   @db.Timestamp(0)
+  password          String?     @db.VarChar(255)
+  profile_image     String?     @db.VarChar(200)
+  google_id         String?     @db.Text
+  remember_token    String?     @db.VarChar(100)
+  created_at        DateTime?   @db.Timestamp(0)
+  updated_at        DateTime?   @db.Timestamp(0)
+  is_active         Boolean     @default(false)
+  is_verified       Boolean     @default(false)
+  is_admin          Boolean     @default(false)
+  refreshToken      String?     @db.VarChar(255)
+  type              users_type?
+  mpin              String      @db.VarChar(255)
+}
+
+model vendors {
+  id           Int      @id
+  name         String   @db.VarChar(255)
+  address      String   @db.VarChar(255)
+  status       Boolean? @default(true)
+  api_base_url String?  @db.VarChar(250)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model visitor_ip {
+  id           Int
+  ip_address   String   @db.VarChar(255)
+  date_time    DateTime @default(now()) @db.Timestamp(0)
+  country_name String?  @db.VarChar(255)
+  region_name  String?  @db.VarChar(255)
+  city_name    String?  @db.VarChar(255)
+  time_zone    String?  @db.VarChar(255)
+  latitude     String?  @db.VarChar(255)
+  longitude    String?  @db.VarChar(255)
+  country_code String?  @db.VarChar(255)
+  regionCode   String?  @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model wishlists {
+  id         Int       @db.UnsignedInt
+  product_id Int
+  user_id    Int
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model zone_state_master {
+  zone_state_id   Int
+  zone_state_code String                            @db.VarChar(5)
+  zone_state_name String                            @db.VarChar(150)
+  country_id      Int
+  dev_region_id   Int
+  is_deleted_flag zone_state_master_is_deleted_flag @default(n)
+  created_by      String                            @db.VarChar(90)
+  created_date    DateTime                          @db.DateTime(0)
+
+  @@ignore
+}
+
+enum menu_master_menu_type {
+  inner
+  outer
+}
+
+enum zone_state_master_is_deleted_flag {
+  y
+  n
+}
+
+enum menu_master_is_active {
+  n
+  y
+}
+
+enum district_master_is_deleted_flag {
+  y
+  n
+}
+
+enum sales_master_discountType {
+  amount
+  percent
+}
+
+enum users_type {
+  regular
+  automatic
+  normal
+}
